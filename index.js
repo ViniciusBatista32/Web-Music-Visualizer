@@ -1,36 +1,50 @@
-// criar o contexto de áudio
-const audioContext = new AudioContext();
+var analyser, ctx, fbc_array, bars, canvas, context, src;
 
-// instanciar elemento de audio
-const audio = document.querySelector('audio');
-audio.crossOrigin = "anonymous";
-// converter para contexto de áudio
-const track = audioContext.createMediaElementSource(audio);
+var x = window.innerWidth;
+var y = window.innerHeight;
 
-// conectar nó ao destino
-track.connect(audioContext.destination);
+canvas = document.getElementById("canvas");
+canvas.width = x;
+canvas.height = y;
 
-// definir botão de play/pause
-const playButton = document.querySelector('button');
+window.onload = function() {
 
-playButton.addEventListener('click', function() {
-    // chechar se audio context está pausado (autoplay policy)
-    if (audioContext.state === 'suspended') {
-        audioContext.resume();
+  var file = document.getElementById("file");
+  var audio = document.getElementById("audio");
+
+  file.onchange = function() {
+    var files = this.files;
+    audio.src = URL.createObjectURL(files[0]);
+    audio.load();
+    audio.play();
+
+    context = new AudioContext();
+    analyser = context.createAnalyser();
+    src = context.createMediaElementSource(audio);
+
+    src.connect(analyser);
+    analyser.connect(context.destination);
+
+    canvas = document.getElementById("canvas");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    ctx = canvas.getContext("2d");
+
+    frameLooper();
+  }
+
+  function frameLooper(){
+    window.requestAnimationFrame(frameLooper);
+    fbc_array = new Uint8Array(analyser.frequencyBinCount);
+    analyser.getByteFrequencyData(fbc_array);
+    ctx.clearRect(0,0,x,y);
+    ctx.fillStyle = '#ff6666';
+    bars = 97;
+    for(var i = 0; i< bars; i++){
+      var bar_x = i * 14;
+      var bar_width = 13;
+      var bar_height = -(fbc_array[i]/1);
+      ctx.fillRect(bar_x,y - (y * 10 / 100),bar_width,bar_height);
     }
-
-    // tocar ou pausar audio
-    if (this.dataset.playing === 'false') {
-        audio.play();
-        this.dataset.playing = 'true';
-    } else if (this.dataset.playing === 'true') {
-        audio.pause();
-        this.dataset.playing = 'false';
-    }
-
-}, false);
-
-// quando a faixa parar o play é dclarado como false
-audio.addEventListener('ended', () => {
-    playButton.dataset.playing = 'false';
-}, false);
+  }
+}

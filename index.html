@@ -1,18 +1,21 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<head>
+  <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
+    <title>Web Music Visualizer</title>
+    <link rel="icon" href="favicon.png" type="image/x-icon"/>
 
-    <audio src="audio.mp3" type="audio/mpeg"></audio>
+    <link rel="stylesheet" href="index.css">
+  </head>
+  <body>
 
-    <button data-playing="false" role="switch" aria-checked="false">
-        <span>Play/Pause</span>
-    </button>
+    <div id="content">
+      <input type="file" id="file" accept="audio/*" />
+      <canvas id="canvas"></canvas>
+      <audio id="audio" controls></audio>
+    </div>
 
     <script src="index.js"></script>
-</body>
+  </body>
 </html>
