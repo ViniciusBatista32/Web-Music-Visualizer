@@ -8,11 +8,19 @@
 
     <link rel="stylesheet" href="index.css">
   </head>
-  <body>
+  <body background="background.jpg">
 
-    <div id="content">
+    <div class="content" id="content">
+      <div class="slidecontainer">
+        <input onchange="freq(this.value)" type="range" min="1" max="2.5" value="1.5" step="0.05" class="slider" id="myRange">
+      </div>
+
       <input type="file" id="file" accept="audio/*" />
+
+      <img id="image" width="200" height="200" src="center.png" hidden>
+
       <canvas id="canvas"></canvas>
+
       <audio id="audio" controls></audio>
     </div>
 
